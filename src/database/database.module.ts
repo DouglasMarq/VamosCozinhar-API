@@ -18,6 +18,12 @@ import { ConfigService } from '../config/config.service';
         entities: ['dist/**/*.entity.js'],
         entitiesTs: ['src/**/*.entity.ts'],
         driver: PostgreSqlDriver,
+        autoLoadEntities: true,
+        migrations: {
+          path: './migrations',
+          transactional: true,
+          snapshot: configService.get('NODE_ENV') === 'dev',
+        },
       }),
     }),
   ],
