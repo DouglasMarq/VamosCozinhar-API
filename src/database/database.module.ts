@@ -18,7 +18,7 @@ import { ConfigService } from '../config/config.service';
         entities: ['dist/**/*.entity.js'],
         entitiesTs: ['src/**/*.entity.ts'],
         driver: PostgreSqlDriver,
-        autoLoadEntities: true,
+        autoLoadEntities: false,
         migrations: {
           path: './migrations',
           transactional: true,

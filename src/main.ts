@@ -13,6 +13,13 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
 
+  app.enableShutdownHooks();
+
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  });
+
   // For development, update schema automatically
   if (process.env.NODE_ENV === 'dev') {
     const orm = app.get(MikroORM);

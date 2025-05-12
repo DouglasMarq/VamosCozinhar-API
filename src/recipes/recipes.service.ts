@@ -1,19 +1,37 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { Recipe } from './entities/recipe.entity';
+import { RecipesRepository } from '../repository/recipes-repository';
 
 @Injectable()
 export class RecipesService {
-  create(createRecipeDto: CreateRecipeDto) {
-    return 'This action adds a new recipe';
+  private readonly logger = new Logger(RecipesService.name);
+
+  constructor(
+    @InjectRepository(Recipe)
+    private readonly repository: RecipesRepository,
+  ) {}
+
+  async create(createRecipeDto: CreateRecipeDto) {
+    if (await this.repository.findOne({ name: createRecipeDto.name }))
+      throw new Error('Recipe already exists');
+
+    const recipe = this.repository.create(createRecipeDto);
+
+    await this.repository.insert(recipe);
+
+    return recipe;
   }
 
   findAll() {
-    return `This action returns all recipes`;
+    return this.repository.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} recipe`;
+  async findOne(id: number) {
+    this.logger.log(`Searching for recipe with id ${id}`);
+    return await this.repository.findById(id);
   }
 
   update(id: number, updateRecipeDto: UpdateRecipeDto) {
