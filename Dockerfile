@@ -4,9 +4,7 @@ WORKDIR /app
 
 RUN addgroup -S appuser && adduser -S appuser -G appuser
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache curl
 
 COPY target/*.jar app.jar
 

@@ -99,6 +99,8 @@ tasks.named('build') {
 
 tasks.named('bootJar') {
 	dependsOn 'check'
+	archiveFileName = 'app.jar'
+	destinationDirectory = file('target')
 }
 
 tasks.named('integrationTest') {
