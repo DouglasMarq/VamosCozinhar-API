@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -41,6 +42,10 @@ public class RecipesControllerTestIT {
                     .withUsername("test")
                     .withPassword("test");
 
+    @Container
+    static GenericContainer<?> valkey =
+            new GenericContainer<>("valkey/valkey:8.1.3-alpine3.22").withExposedPorts(6379);
+
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
@@ -51,6 +56,9 @@ public class RecipesControllerTestIT {
         registry.add("spring.flyway.url", postgres::getJdbcUrl);
         registry.add("spring.flyway.user", postgres::getUsername);
         registry.add("spring.flyway.password", postgres::getPassword);
+
+        registry.add("spring.data.redis.host", valkey::getHost);
+        registry.add("spring.data.redis.port", valkey::getFirstMappedPort);
     }
 
     @Autowired private WebApplicationContext webApplicationContext;

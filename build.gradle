@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.douglasmarq'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 
 java {
 	toolchain {
@@ -59,6 +59,67 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+configurations {
+	integrationTestImplementation.extendsFrom testImplementation
+	integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
+	exclude '**/*IT.class'
+	exclude '**/*IntegrationTest.class'
+}
+
+tasks.register('integrationTest', Test) {
+	description = 'Runs integration tests.'
+	group = 'verification'
+
+	useJUnitPlatform()
+
+	include '**/*IT.class'
+	include '**/*IntegrationTest.class'
+
+	shouldRunAfter test
+
+	testClassesDirs = sourceSets.test.output.classesDirs
+	classpath = sourceSets.test.runtimeClasspath
+}
+
+tasks.named('compileJava') {
+	dependsOn 'spotlessCheck'
+}
+
+tasks.named('check') {
+	dependsOn 'spotlessCheck', 'test', 'integrationTest'
+}
+
+tasks.named('build') {
+	dependsOn 'check'
+}
+
+tasks.named('bootJar') {
+	dependsOn 'check'
+}
+
+tasks.named('integrationTest') {
+	mustRunAfter 'test'
+}
+
+tasks.named('test') {
+	mustRunAfter 'spotlessCheck'
+}
+
+tasks.register('buildForProduction') {
+	description = 'Runs lint checks, unit tests, integration tests, and builds production JAR'
+	group = 'build'
+
+	dependsOn 'spotlessCheck', 'test', 'integrationTest', 'bootJar'
+
+	doLast {
+		println "All checks passed!"
+		println "Code formatting: PASSED"
+		println "Unit tests: PASSED"
+		println "Integration tests: PASSED"
+		println "Production JAR: ${tasks.bootJar.archiveFile.get().asFile.absolutePath}"
+	}
 }
