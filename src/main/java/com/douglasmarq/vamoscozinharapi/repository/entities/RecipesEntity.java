@@ -3,7 +3,6 @@ package com.douglasmarq.vamoscozinharapi.repository.entities;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

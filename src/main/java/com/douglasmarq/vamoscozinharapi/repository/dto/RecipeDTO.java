@@ -13,7 +13,8 @@ public record RecipeDTO(
         @NotNull(message = "Difficulty level is required") Integer difficulty,
         String image,
         @Valid List<IngredientsDTO> ingredients,
-        List<String> prepare) implements Serializable {
+        List<String> prepare)
+        implements Serializable {
 
     public static RecipeDTO of(
             String name,

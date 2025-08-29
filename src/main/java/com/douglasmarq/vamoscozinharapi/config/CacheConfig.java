@@ -42,24 +42,22 @@ public class CacheConfig {
 
     @Bean
     public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
-        RedisCacheConfiguration defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
-                .serializeKeysWith(
-                        RedisSerializationContext.SerializationPair.fromSerializer(
-                                new StringRedisSerializer()))
-                .serializeValuesWith(
-                        RedisSerializationContext.SerializationPair.fromSerializer(
-                                new GenericJackson2JsonRedisSerializer()));
+        RedisCacheConfiguration defaultConfig =
+                RedisCacheConfiguration.defaultCacheConfig()
+                        .serializeKeysWith(
+                                RedisSerializationContext.SerializationPair.fromSerializer(
+                                        new StringRedisSerializer()))
+                        .serializeValuesWith(
+                                RedisSerializationContext.SerializationPair.fromSerializer(
+                                        new GenericJackson2JsonRedisSerializer()));
 
         return (builder) ->
                 builder.withCacheConfiguration(
-                                "recipes",
-                                defaultConfig.entryTtl(Duration.ofMinutes(30)))
+                                "recipes", defaultConfig.entryTtl(Duration.ofMinutes(30)))
                         .withCacheConfiguration(
-                                "recipe",
-                                defaultConfig.entryTtl(Duration.ofMinutes(15)))
+                                "recipe", defaultConfig.entryTtl(Duration.ofMinutes(15)))
                         .withCacheConfiguration(
                                 "hotRecipesByViews",
                                 defaultConfig.entryTtl(Duration.ofMinutes(10)));
     }
-
 }

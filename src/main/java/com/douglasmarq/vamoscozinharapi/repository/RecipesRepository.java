@@ -27,10 +27,8 @@ public class RecipesRepository {
         return repository.save(entity);
     }
 
-    public boolean deleteById(Long id) {
+    public void deleteById(Long id) {
         repository.deleteById(id);
-
-        return true;
     }
 
     public void deleteAll() {

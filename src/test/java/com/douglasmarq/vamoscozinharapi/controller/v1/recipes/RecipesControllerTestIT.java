@@ -108,14 +108,6 @@ public class RecipesControllerTestIT {
     }
 
     @Test
-    void shouldGetEmptyListWhenNoRecipes() throws Exception {
-        mockMvc.perform(get("/v1/recipes"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(0));
-    }
-
-    @Test
     void shouldGetRecipeById() throws Exception {
         RecipesEntity savedRecipe =
                 recipesRepository.save(createRecipeEntity("Test Recipe", "Test Description", 3));

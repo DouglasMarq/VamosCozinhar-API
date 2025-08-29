@@ -47,6 +47,7 @@ public class RecipesServiceImpl implements RecipesService {
             entity.setDescription(recipe.description());
             entity.setDifficulty(recipe.difficulty());
             entity.setImage(recipe.image());
+            entity.setPrepare(recipe.prepare());
 
             List<IngredientsDTO> ingredients =
                     recipe.ingredients().stream()
@@ -73,6 +74,11 @@ public class RecipesServiceImpl implements RecipesService {
             value = {"recipe", "recipes"},
             key = "#id")
     public boolean deleteRecipeById(Long id) {
-        return repository.deleteById(id);
+        var recipe = repository.getRecipeById(id);
+
+        if (recipe == null) return false;
+
+        repository.deleteById(id);
+        return true;
     }
 }
