@@ -4,18 +4,7 @@ services:
     restart: on-failure
     ports:
       - "5432:5432"
-    #volumes:
-    #  - type: tmpfs
-    #    target: /dev/shm
-    #    tmpfs:
-    #      size: 134217728 # 128*2^20 bytes = 128Mb
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
-
-  adminer:
-    image: adminer:latest
-    restart: on-failure
-    ports:
-      - "8080:8080"

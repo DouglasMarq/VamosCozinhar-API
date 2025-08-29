@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: vamoscozinharapi
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_DATASOURCE:jdbc:postgresql://localhost:5432/postgres}
+    password: ${DB_PASS:postgres}
+    username: ${DB_USERNAME:postgres}
+    hikari:
+      maximum-pool-size: ${HIKARI_MAX_POOL_SIZE:50}
+      minimum-idle: ${HIKARI_MIN_POOL_IDLE:10}
+      idle-timeout: ${HIKARI_IDLE_TIMEOUT:300000}
+      max-lifetime: ${HIKARI_MAX_LIFETIME:600000}
+      auto-commit: ${HIKARI_AUTO_COMMIT:true}
+
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc.batch_size: 25
+        order_inserts: true
+        order_updates: true
+        transaction:
+          jta:
+            platform: none
+
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health,info,metrics,prometheus
+    endpoint:
+      health:
+        show-details: when_authorized
+      metrics:
+        enabled: true
+
+  flyway:
+    enabled: ${FLYWAY_ENABLED:true}
+    user: ${DB_USERNAME:postgres}
+    password: ${DB_PASS:postgres}
+    create-schemas: true
+    url: ${DB_DATASOURCE:jdbc:postgresql://localhost:5432/postgres}
+    locations: classpath:db/migration
+
+logging:
+  level:
+    root: ${LOG_LEVEL:INFO}
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+server:
+  port: ${APP_PORT:8080}
