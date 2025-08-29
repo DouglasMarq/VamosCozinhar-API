@@ -23,13 +23,17 @@ public class RecipesRepository {
         return repository.findById(id).orElse(null);
     }
 
-    public void save(RecipesEntity entity) {
-        repository.save(entity);
+    public RecipesEntity save(RecipesEntity entity) {
+        return repository.save(entity);
     }
 
     public boolean deleteById(Long id) {
         repository.deleteById(id);
 
         return true;
+    }
+
+    public void deleteAll() {
+        repository.deleteAll();
     }
 }
