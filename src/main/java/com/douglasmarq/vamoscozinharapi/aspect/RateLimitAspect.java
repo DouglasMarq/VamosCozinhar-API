@@ -1,7 +1,6 @@
 package com.douglasmarq.vamoscozinharapi.aspect;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 

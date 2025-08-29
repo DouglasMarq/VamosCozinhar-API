@@ -2,7 +2,6 @@ package com.douglasmarq.vamoscozinharapi.controller.v1.recipes;
 
 import java.util.List;
 
-import com.douglasmarq.vamoscozinharapi.annotation.RateLimit;
 import jakarta.validation.Valid;
 
 import org.springframework.cache.annotation.Cacheable;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.douglasmarq.vamoscozinharapi.annotation.RateLimit;
 import com.douglasmarq.vamoscozinharapi.repository.dto.RateRecipeDTO;
 import com.douglasmarq.vamoscozinharapi.repository.entities.HotRecipesEntity;
 import com.douglasmarq.vamoscozinharapi.service.recipes.HotRecipesService;
