@@ -1,7 +1,11 @@
 package com.douglasmarq.vamoscozinharapi.repository.entities;
 
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,7 +26,8 @@ import com.douglasmarq.vamoscozinharapi.repository.dto.IngredientsDTO;
 
 @Entity
 @Table(name = "recipes")
-public class RecipesEntity {
+public class RecipesEntity implements Serializable {
+    @Serial private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "recipes_id_seq")
@@ -45,20 +50,20 @@ public class RecipesEntity {
     @Column(name = "prepare", columnDefinition = "jsonb")
     private List<String> prepare = new ArrayList<>();
 
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     @PrePersist
     protected void onCreate() {
-        LocalDateTime now = LocalDateTime.now();
+        Date now = Date.from(Instant.now());
         this.createdAt = now;
         this.updatedAt = now;
     }
 
-    private LocalDateTime updatedAt;
+    private Date updatedAt;
 
     @PreUpdate
     protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
+        this.updatedAt = Date.from(Instant.now());
     }
 
     @Override
@@ -90,19 +95,19 @@ public class RecipesEntity {
                 getUpdatedAt());
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 

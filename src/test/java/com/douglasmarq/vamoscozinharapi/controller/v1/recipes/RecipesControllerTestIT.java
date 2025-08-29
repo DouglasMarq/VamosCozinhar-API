@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -54,8 +53,7 @@ public class RecipesControllerTestIT {
         registry.add("spring.flyway.password", postgres::getPassword);
     }
 
-    @Autowired
-    private WebApplicationContext webApplicationContext;
+    @Autowired private WebApplicationContext webApplicationContext;
 
     private MockMvc mockMvc;
 
@@ -160,13 +158,7 @@ public class RecipesControllerTestIT {
     @Test
     void shouldReturnBadRequestWhenCreateRecipeWithInvalidData() throws Exception {
         RecipeDTO invalidRecipe =
-                RecipeDTO.of(
-                        null,
-                        "Description",
-                        3,
-                        "http://image.jpg",
-                        List.of(),
-                        List.of());
+                RecipeDTO.of(null, "Description", 3, "http://image.jpg", List.of(), List.of());
         String recipeJson = objectMapper.writeValueAsString(invalidRecipe);
 
         mockMvc.perform(

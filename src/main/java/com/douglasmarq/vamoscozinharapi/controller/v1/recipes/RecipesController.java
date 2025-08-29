@@ -4,7 +4,6 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,13 +29,11 @@ public class RecipesController {
     }
 
     @GetMapping()
-    @Cacheable(value = "recipes")
     public ResponseEntity<List<RecipesEntity>> getAllRecipes() {
         return ResponseEntity.ok().body(recipesService.getAllRecipes());
     }
 
     @GetMapping("/{id}")
-    @Cacheable(value = "recipe", key = "#id")
     public ResponseEntity<RecipesEntity> getRecipeById(@PathVariable Long id) {
         RecipesEntity recipe = recipesService.getRecipeById(id);
         if (recipe == null) {

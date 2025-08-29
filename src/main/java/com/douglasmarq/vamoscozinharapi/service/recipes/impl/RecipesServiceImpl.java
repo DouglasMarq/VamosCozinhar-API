@@ -6,6 +6,8 @@ import static com.douglasmarq.vamoscozinharapi.utils.StringUtils.validateImageUr
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.douglasmarq.vamoscozinharapi.repository.RecipesRepository;
@@ -31,11 +33,13 @@ public class RecipesServiceImpl implements RecipesService {
     }
 
     @Override
+    @Cacheable(value = "recipes")
     public List<RecipesEntity> getAllRecipes() {
         return repository.getAllRecipes();
     }
 
     @Override
+    @CacheEvict(value = "recipes", allEntries = true)
     public void createRecipe(RecipeDTO recipe) {
         try {
             RecipesEntity entity = new RecipesEntity();
@@ -59,11 +63,15 @@ public class RecipesServiceImpl implements RecipesService {
     }
 
     @Override
+    @Cacheable(value = "recipe", key = "#id")
     public RecipesEntity getRecipeById(Long id) {
         return repository.getRecipeById(id);
     }
 
     @Override
+    @CacheEvict(
+            value = {"recipe", "recipes"},
+            key = "#id")
     public boolean deleteRecipeById(Long id) {
         return repository.deleteById(id);
     }
