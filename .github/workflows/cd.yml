@@ -39,15 +39,3 @@ jobs:
 
       - name: Copy JAR to artifacts
         run: cp target/app.jar ~/jenkins_home/tmp/artifacts
-
-      - name: Upload JAR artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: application-jar
-          path: artifacts/app.jar
-          retention-days: 1
-
-      - name: Artifact ready
-        run: |
-          echo "Artifacts ready for Jenkins:"
-          ls -la ~/jenkins_home/tmp/artifacts
