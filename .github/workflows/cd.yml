@@ -41,21 +41,3 @@ jobs:
 
       - name: Run integration tests
         run: ./gradlew integrationTest
-
-      - name: Create artifacts directory
-        run: mkdir -p artifacts
-
-      - name: Copy JAR to artifacts
-        run: cp target/app.jar artifacts/
-
-      - name: Upload JAR artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: application-jar
-          path: artifacts/app.jar
-          retention-days: 30
-
-      - name: Artifact ready
-        run: |
-          echo "Artifacts ready for Jenkins:"
-          ls -la artifacts/
