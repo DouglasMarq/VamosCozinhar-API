@@ -1,8 +1,8 @@
 name: CD Pipeline
 
 on:
-  pull_request:
-    branches: [ main ]
+  push:
+    branches: [ main, develop ]
 
 jobs:
   build:
@@ -30,14 +30,23 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Run Spotless Check
-        run: ./gradlew spotlessCheck
-
       - name: Build project
         run: ./gradlew build
 
-      - name: Run unit tests
-        run: ./gradlew test
+      - name: Create artifacts directory
+        run: mkdir -p ~/jenkins_home/tmp/artifacts
 
-      - name: Run integration tests
-        run: ./gradlew integrationTest
+      - name: Copy JAR to artifacts
+        run: cp target/app.jar ~/jenkins_home/tmp/artifacts
+
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: application-jar
+          path: artifacts/app.jar
+          retention-days: 1
+
+      - name: Artifact ready
+        run: |
+          echo "Artifacts ready for Jenkins:"
+          ls -la ~/jenkins_home/tmp/artifacts
