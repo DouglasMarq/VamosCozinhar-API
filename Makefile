@@ -12,3 +12,9 @@ docker/up:
 
 docker/down:
 	docker compose down
+
+podman/up:
+	podman compose up -d
+
+podman/down:
+	podman compose down

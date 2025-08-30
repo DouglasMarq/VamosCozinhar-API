@@ -14,7 +14,7 @@ USER appuser
 
 EXPOSE 8080
 
-ENV JAVA_OPTS="-Xms1g -Xmx2g -XX:+UseStringDeduplication -XX:+UseZGC -XX:+ZGenerational"
+ENV JAVA_OPTS="-Xms1g -Xmx2g -XX:+UseStringDeduplication -XX:+UseZGC -XX:+ZGenerational -XX:+PrintGC"
 
 ENV JAVA_OPTS="$JAVA_OPTS \
     -XX:+ExitOnOutOfMemoryError \
