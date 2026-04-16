@@ -2,8 +2,11 @@ package com.douglasmarq.vamoscozinharapi.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.douglasmarq.vamoscozinharapi.repository.dto.RecipeSearchRequest;
 import com.douglasmarq.vamoscozinharapi.repository.entities.RecipesEntity;
 
 @Repository
@@ -33,5 +36,9 @@ public class RecipesRepository {
 
     public void deleteAll() {
         repository.deleteAll();
+    }
+
+    public Page<RecipesEntity> search(RecipeSearchRequest filters, Pageable pageable) {
+        return repository.search(filters.id(), filters.q(), filters.difficulty(), pageable);
     }
 }

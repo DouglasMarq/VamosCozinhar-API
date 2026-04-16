@@ -2,10 +2,13 @@ package com.douglasmarq.vamoscozinharapi.service.recipes.impl;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.douglasmarq.vamoscozinharapi.repository.HotRecipesRepository;
-import com.douglasmarq.vamoscozinharapi.repository.dto.RateRecipeDTO;
 import com.douglasmarq.vamoscozinharapi.repository.entities.HotRecipesEntity;
 import com.douglasmarq.vamoscozinharapi.service.recipes.HotRecipesService;
 
@@ -18,17 +21,24 @@ public class HotRecipesServiceImpl implements HotRecipesService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value = "hotRecipesByViews", unless = "#result.isEmpty()")
     public List<HotRecipesEntity> getHotRecipesByViews() {
         return repository.getHotRecipesByViews();
     }
 
     @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value = "hotRecipesByLikes", unless = "#result.isEmpty()")
     public List<HotRecipesEntity> getHotRecipesByLikes() {
         return repository.getHotRecipesByLikes();
     }
 
     @Override
-    public boolean rateHotRecipe(Long id, RateRecipeDTO payload) {
-        return repository.rateHotRecipe(id, payload);
+    @Async
+    @Transactional
+    @CacheEvict(value = "hotRecipesByViews", allEntries = true)
+    public void incrementViewsAsync(Long recipeId) {
+        repository.incrementViews(recipeId);
     }
 }

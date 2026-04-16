@@ -12,5 +12,5 @@ public @interface RateLimit {
 
     int windowSeconds() default 60;
 
-    String message() default "Rate limit exceeded. Please try again later.";
+    String messageKey() default "error.rateLimit.default";
 }

@@ -2,9 +2,8 @@ package com.douglasmarq.vamoscozinharapi.repository.entities;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,6 +17,7 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -43,111 +43,60 @@ public class RecipesEntity implements Serializable {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "recipe_ingredients", columnDefinition = "jsonb")
-    private List<IngredientsDTO> RecipeIngredients = new ArrayList<>();
+    private List<IngredientsDTO> recipeIngredients = new ArrayList<>();
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "prepare", columnDefinition = "jsonb")
     private List<String> prepare = new ArrayList<>();
 
-    private Date createdAt;
+    @Formula("(SELECT COALESCE(hr.likes, 0) FROM hot_recipes hr WHERE hr.recipe_id = id)")
+    private Long likesCount;
+
+    @Formula("(SELECT COALESCE(hr.views, 0) FROM hot_recipes hr WHERE hr.recipe_id = id)")
+    private Long viewsCount;
+
+    @Formula("(SELECT count(*) FROM recipe_comments rc WHERE rc.recipe_id = id)")
+    private Long commentsCount;
+
+    @Formula("(SELECT count(*) FROM recipe_favorites rf WHERE rf.recipe_id = id)")
+    private Long favoritesCount;
+
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        Date now = Date.from(Instant.now());
+        LocalDateTime now = LocalDateTime.now();
         this.createdAt = now;
         this.updatedAt = now;
     }
 
-    private Date updatedAt;
-
     @PreUpdate
     protected void onUpdate() {
-        this.updatedAt = Date.from(Instant.now());
+        this.updatedAt = LocalDateTime.now();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        RecipesEntity that = (RecipesEntity) o;
-        return Objects.equals(getId(), that.getId())
-                && Objects.equals(getName(), that.getName())
-                && Objects.equals(getDescription(), that.getDescription())
-                && Objects.equals(getDifficulty(), that.getDifficulty())
-                && Objects.equals(getImage(), that.getImage())
-                && Objects.equals(getRecipeIngredients(), that.getRecipeIngredients())
-                && Objects.equals(getPrepare(), that.getPrepare())
-                && Objects.equals(getCreatedAt(), that.getCreatedAt())
-                && Objects.equals(getUpdatedAt(), that.getUpdatedAt());
+        if (this == o) return true;
+        if (!(o instanceof RecipesEntity that)) return false;
+        return id != null && Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-                getId(),
-                getName(),
-                getDescription(),
-                getDifficulty(),
-                getImage(),
-                getRecipeIngredients(),
-                getPrepare(),
-                getCreatedAt(),
-                getUpdatedAt());
+        return getClass().hashCode();
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public Long getId() {
+        return id;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public List<String> getPrepare() {
-        return prepare;
-    }
-
-    public void setPrepare(List<String> prepare) {
-        this.prepare = prepare;
-    }
-
-    public List<IngredientsDTO> getRecipeIngredients() {
-        return RecipeIngredients;
-    }
-
-    public void setRecipeIngredients(List<IngredientsDTO> recipeIngredients) {
-        RecipeIngredients = recipeIngredients;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public Integer getDifficulty() {
-        return difficulty;
-    }
-
-    public void setDifficulty(Integer difficulty) {
-        this.difficulty = difficulty;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -158,11 +107,91 @@ public class RecipesEntity implements Serializable {
         this.name = name;
     }
 
-    public Long getId() {
-        return id;
+    public String getDescription() {
+        return description;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(Integer difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public List<IngredientsDTO> getRecipeIngredients() {
+        return recipeIngredients;
+    }
+
+    public void setRecipeIngredients(List<IngredientsDTO> recipeIngredients) {
+        this.recipeIngredients = recipeIngredients;
+    }
+
+    public List<String> getPrepare() {
+        return prepare;
+    }
+
+    public void setPrepare(List<String> prepare) {
+        this.prepare = prepare;
+    }
+
+    public Long getLikesCount() {
+        return likesCount;
+    }
+
+    public void setLikesCount(Long likesCount) {
+        this.likesCount = likesCount;
+    }
+
+    public Long getViewsCount() {
+        return viewsCount;
+    }
+
+    public void setViewsCount(Long viewsCount) {
+        this.viewsCount = viewsCount;
+    }
+
+    public Long getCommentsCount() {
+        return commentsCount;
+    }
+
+    public void setCommentsCount(Long commentsCount) {
+        this.commentsCount = commentsCount;
+    }
+
+    public Long getFavoritesCount() {
+        return favoritesCount;
+    }
+
+    public void setFavoritesCount(Long favoritesCount) {
+        this.favoritesCount = favoritesCount;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

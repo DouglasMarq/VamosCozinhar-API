@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,18 +34,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
 @Transactional
+@WithMockUser
 public class RecipesControllerTestIT {
 
     @Container
     static PostgreSQLContainer<?> postgres =
-            new PostgreSQLContainer<>("postgres:17.6-alpine3.22")
+            new PostgreSQLContainer<>("postgres:18.3-alpine3.23")
                     .withDatabaseName("testdb")
                     .withUsername("test")
                     .withPassword("test");
 
     @Container
     static GenericContainer<?> valkey =
-            new GenericContainer<>("valkey/valkey:8.1.3-alpine3.22").withExposedPorts(6379);
+            new GenericContainer<>("valkey/valkey:9.0-alpine3.23").withExposedPorts(6379);
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {

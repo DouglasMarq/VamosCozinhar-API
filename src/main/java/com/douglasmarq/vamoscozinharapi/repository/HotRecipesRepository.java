@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Repository;
 
-import com.douglasmarq.vamoscozinharapi.repository.dto.RateRecipeDTO;
 import com.douglasmarq.vamoscozinharapi.repository.entities.HotRecipesEntity;
 
 @Repository
@@ -25,8 +24,7 @@ public class HotRecipesRepository {
         return repository.findTopByOrderByLikesDesc(Limit.of(5));
     }
 
-    public boolean rateHotRecipe(Long id, RateRecipeDTO payload) {
-        int affectedRows = repository.rateHotRecipe(id, payload.liked());
-        return affectedRows > 0;
+    public int incrementViews(Long id) {
+        return repository.incrementViews(id);
     }
 }
